@@ -17,7 +17,7 @@ namespace rocksdb {
   #if defined(OS_SOLARIS)
     __thread PerfContext perf_context_;
   #else
-    __thread PerfContext perf_context;
+    /*__thread*/ PerfContext perf_context;
   #endif
 #endif
 
@@ -172,4 +172,9 @@ PerfContext *getPerfContext() {
 }
 #endif
 
+
 }
+std::string rocksdb_stats() {
+  return rocksdb::perf_context.ToString();
+}
+

@@ -159,7 +159,7 @@ extern __declspec(thread) PerfContext perf_context;
     PerfContext *getPerfContext();
     #define perf_context (*getPerfContext())
   #else
-    extern __thread PerfContext perf_context;
+    extern /*__thread*/ PerfContext perf_context;
   #endif
 #endif
 
