@@ -163,6 +163,8 @@ class MemTable {
 
   InternalIterator* NewRangeTombstoneIterator(const ReadOptions& read_options);
 
+  void Prefetch(const Slice* *keys, size_t count);
+
   // Add an entry into memtable that maps key to value at the
   // specified sequence number and with the specified type.
   // Typically value will be empty if type==kTypeDeletion.

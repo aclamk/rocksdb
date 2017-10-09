@@ -418,6 +418,21 @@ MemTable::MemTableStats MemTable::ApproximateStats(const Slice& start_ikey,
   return {entry_count * (data_size / n), entry_count};
 }
 
+void MemTable::Prefetch(const Slice* *keys, size_t count) {
+  KeyHandle Keys[count];
+  for (size_t i=0;i<count;i++) {
+    uint32_t key_size = keys[i]->size();
+    uint32_t internal_key_size = key_size + 8;
+    char* ptr = (char*)alloca(key_size + 5);
+    char* p = EncodeVarint32(ptr, internal_key_size);
+    memcpy(p, keys[i]->data(), key_size);
+    Keys[i] = static_cast<KeyHandle>(ptr);
+    table_->Prefetch(&Keys[i], 1);
+  }
+
+};
+
+
 void MemTable::Add(SequenceNumber s, ValueType type,
                    const Slice& key, /* user key */
                    const Slice& value, bool allow_concurrent,

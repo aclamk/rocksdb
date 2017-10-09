@@ -77,6 +77,8 @@ class MemTableRep {
   // prefetching more efficient.
   virtual KeyHandle Allocate(const size_t len, char** buf);
 
+  virtual void Prefetch(KeyHandle *handles, size_t count) {*(char*)0=0;};
+
   // Insert key into the collection. (The caller will pack key and value into a
   // single buffer and pass that in as the parameter to Insert).
   // REQUIRES: nothing that compares equal to key is currently in the

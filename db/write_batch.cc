@@ -377,12 +377,15 @@ Status WriteBatch::Iterate(Handler* handler) const {
     if (!s.ok()) {
       return s;
     }
-
     switch (tag) {
       case kTypeColumnFamilyValue:
       case kTypeValue:
         assert(content_flags_.load(std::memory_order_relaxed) &
                (ContentFlags::DEFERRED | ContentFlags::HAS_PUT));
+        {
+        const Slice *kkey = &key;
+        handler->Prefetch(&kkey, 1);
+        }
         s = handler->PutCF(column_family, key, value);
         found++;
         break;
@@ -935,13 +938,17 @@ public:
     return true;
   }
 
+  virtual void Prefetch(const Slice* *keys, size_t count) {
+    //MemTable* mem = cf_mems_->GetMemTable();
+    //mem->Prefetch(keys, count);
+  }
+
   virtual Status PutCF(uint32_t column_family_id, const Slice& key,
                        const Slice& value) override {
     if (rebuilding_trx_ != nullptr) {
       WriteBatchInternal::Put(rebuilding_trx_, column_family_id, key, value);
       return Status::OK();
     }
-
     Status seek_status;
     if (!SeekToColumnFamily(column_family_id, &seek_status)) {
       ++sequence_;

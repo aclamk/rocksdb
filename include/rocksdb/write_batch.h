@@ -176,6 +176,9 @@ class WriteBatch : public WriteBatchBase {
   class Handler {
    public:
     virtual ~Handler();
+
+    virtual void Prefetch(const Slice* *key, size_t count) {*(char*)0=0;};
+
     // All handler functions in this class provide default implementations so
     // we won't break existing clients of Handler on a source code level when
     // adding a new member function.

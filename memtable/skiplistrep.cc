@@ -32,6 +32,11 @@ public:
    return static_cast<KeyHandle>(*buf);
   }
 
+ virtual void Prefetch(KeyHandle *handles, size_t count) override {
+   skip_list_.Prefetch(const_cast<const char* *>(reinterpret_cast<char* *>(handles)), count);
+ };
+
+
   // Insert key into the list.
   // REQUIRES: nothing that compares equal to key is currently in the list.
   virtual void Insert(KeyHandle handle) override {

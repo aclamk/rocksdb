@@ -76,6 +76,8 @@ class InlineSkipList {
   // Allocate a splice using allocator.
   Splice* AllocateSplice();
 
+  void Prefetch(const char* *keys, size_t count);
+
   // Inserts a key allocated by AllocateKey, after the actual key value
   // has been filled in.
   //
@@ -628,6 +630,11 @@ InlineSkipList<Comparator>::AllocateSplice() {
 template <class Comparator>
 void InlineSkipList<Comparator>::Insert(const char* key) {
   Insert<false>(key, seq_splice_, false);
+}
+
+template <class Comparator>
+void InlineSkipList<Comparator>::Prefetch(const char* *keys, size_t count) {
+  std::cout << "ble" << std::endl;
 }
 
 template <class Comparator>
